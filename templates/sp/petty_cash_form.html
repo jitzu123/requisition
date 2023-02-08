@@ -1,0 +1,100 @@
+{% set active_page = "petty_cash" %}
+{% extends "sp/header.html" %}
+{% block index %}
+<div class="container-fluid">
+<form id="submit-form">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">PETTY CASH (for Php 1,000 and below)</h1>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="employee" value="{{data[1]}} {{data[2]}}" readonly>
+        </div>
+        <div class="col-sm-6">
+            <input type="text" name="date" class="form-control" readonly>
+        </div>
+    </div>    
+    <hr>
+    <div class="row" id="row_0">
+        <div class="col-sm-2">
+            <label for="department">Department/Office <span class="text-danger">*</span> </label>
+            <input type="text" class="form-control" name="department_office" id="department" value="{{ data[13] }}" readonly>
+        </div>
+        <div class="col-sm-2">
+            <label for="bc">Budget Code <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="budget_code" id="bc" required>
+        </div>
+        <div class="col-sm-2">
+            <label for="amount">Amount in Words <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="amount_in_words" id="amount" required>
+        </div>
+        <div class="col-sm-2">
+            <label for="php">PHP <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" min="1" max="1000" name="php" id="php" required>
+        </div>
+        <div class="col-sm-4">
+            <label for="purpose">Purpose (Note: Subject for Liquidation)<span class="text-danger">*</span></label>
+            <textarea class="form-control" name="purpose" id="purpose" cols="20" rows="2" required></textarea>
+        </div>
+        <div class="col-sm-4">
+            <label for="file">Attachment <span class="text-danger">*</span></label>
+            <input type="file" name="file" id="file" required>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <button type="submit" class="btn btn-success">Submit Request</button>
+</form>
+</div>
+<input type="text" value="0" id="cnt" style="display: none;">
+<script type="text/javascript">
+    function setVisible(selector, visible) {
+        document.querySelector(selector).style.display = visible ? 'block' : 'none';
+    }
+
+    $('#submit-form').submit(function(e){
+        e.preventDefault();
+        const url = '/submit_petty_cash/{{data[0]}}';
+        var formData = new FormData(this);
+        $.ajax({
+            data : formData,
+            url  : url,
+            type : 'POST',
+            cache		: false,
+            contentType	: false,
+            processData	: false,
+            beforeSend: function(){
+                console.log('loading');
+                setVisible('#loading', true);
+            },
+            complete: function(){
+                console.log('done');
+                setVisible('#loading', false);
+            },
+            success: function(response){
+                if(response.data == 'success') {
+                    window.location.href = '/'+response.route; 
+                }
+            }
+        });
+    });
+
+    $("#file").change(function () {
+        var fileExtension = ['pdf'];
+        if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+            $("#file").val('');
+            alert("Only formats are allowed : "+fileExtension.join(', '));
+        }
+    });
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    $("input[name='date']").val(today);
+
+</script>
+{% endblock %}

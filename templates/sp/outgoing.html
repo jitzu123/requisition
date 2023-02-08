@@ -1,0 +1,53 @@
+{% set active_page = "outgoing" %}
+{% extends "sp/header.html" %}
+{% block index %}
+<div class="container-fluid">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Outgoing Requests</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Request Type</th>
+                            <th>Date</th>
+                            <th>Department/Office</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in purchase_request %}
+                            <tr>
+                                <td>Purchase Request</td>
+                                <td>{{i[3]}}</td>
+                                <td>{{i[7]}}</td>
+                                <td>{{i[11]}}</td>
+                                <td>
+                                    {% if i[22] == 'APPROVED' %}
+                                        <b class="text-success">{{i[22]}}</b>
+                                    {% elif i[22] == 'CANCELLED' or i[22] == 'DISAPPROVED' %}
+                                        <b class="text-danger">{{i[22]}}</b>
+                                    {% else %}
+                                        <b class="text-danger">PENDING FOR APPROVAL OF {{i[22]}}</b>
+                                    {% endif %}
+                                </td>
+                                <td>{{i[23]}}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="/view_purchase_request_form/{{i[0]}}"><i class="fas fa-eye"></i> More Details</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

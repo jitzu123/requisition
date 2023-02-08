@@ -1,0 +1,108 @@
+{% set active_page = "canvass_form" %}
+{% extends "pmo/header.html" %}
+{% block index %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">View Canvass Sheet Form</h6>
+        
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" title="Print" id="print" onclick="printDiv('printableArea')" class="btn btn-primary btn-sm"><i class="fas fa-print"></i> Print</button>
+        </div>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body" id="printableArea">
+        <button type="submit" id="submit" style="display: none;"></button>
+        <center>
+            <h6><b>Saint Michael College of Caraga</u></h6>
+            <h6><b>Brgy. 4, Atupan St., Nasipit, Agusan del Norte</u></h6>
+            <h6><b>Tel. No. (085)343-3251; (085)283-3113</u></h6>
+            <br>
+            <h5>CANVASS SHEET</h5>
+        </center>
+        <br><br>
+        <div class="row">
+            <div class="col-sm-6">
+                <h6>Date: _______________________________________</h6><br>
+            </div>
+            <div class="col-sm-6">
+                <h6>PO NO. _______________________________________</h6><br>
+            </div>
+        </div>
+
+        <table class="table table-bordered" style="font-weight: normal;">
+            <tr>
+                <td class="text-center">ITEM NO.</td>
+                <td class="text-center">QUANTITY</td>
+                <td class="text-center">ITEM DESCRIPTION</td>
+                <td class="text-center" colspan="6">CANVASS PRICE (indicate the supplier's name)</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>UNIT PRICE</td>
+                <td>AMOUNT</td>
+                <td>UNIT PRICE</td>
+                <td>AMOUNT</td>
+                <td>UNIT PRICE</td>
+                <td>AMOUNT</td>
+            </tr>
+            {% for i in range(36) %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td colspan="2">TERMS:</td>
+                <td colspan="2">TERMS:</td>
+                <td colspan="2">TERMS:</td>
+            </tr>
+        </table>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h6 style="border:1px solid black; padding: 10px; width: 340px;">
+                    Form No.: FM-DPM-SMCC-PIS-02<br>
+                    Issue Status: 01<br>
+                    Revision No.: 00<br>
+                    Date Effective: 30 October 2017<br>
+                    Approved By: President
+                </h6>
+            </div>
+            <div class="col-sm-6">
+                <br><br>
+                <h6>
+                    _____________________________________________<br>
+                    Supplier/s Signature and/or Representative
+                </h6>
+            </div>
+        </div>
+
+        
+    </div> 
+</div>
+
+<script type="text/javascript">
+    function printDiv(divName) {
+        var printContents = "";
+        printContents += document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>
+{% endblock %}

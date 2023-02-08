@@ -1,0 +1,107 @@
+{% set active_page = "incoming" %}
+{% extends "cashier/header.html" %}
+{% block index %}
+<div class="container-fluid">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Incoming Requests</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Request Type</th>
+                            <th>Date</th>
+                            <th>Department/Office</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in petty_cash %}
+                            <tr>
+                                <td>Petty Cash</td>
+                                <td>{{i[5]}}</td>
+                                <td>{{i[3]}}</td>
+                                <td>{{i[9]}}</td>
+                                <td>
+                                    {% if i[13] == 'APPROVED' %}
+                                        <b class="text-success">{{i[13]}}</b>
+                                    {% elif i[13] == 'CANCELLED' %}
+                                        <b class="text-danger">{{i[13]}}</b>
+                                    {% else %}
+                                        <b class="text-danger">PENDING FOR APPROVAL OF {{i[13]}}</b>
+                                    {% endif %}
+                                </td>
+                                <td>{{i[15]}}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        {% set list1 = i[15].split(' ') %}
+                                        {% if list1[0] != 'RELEASED' %}
+                                            <a class="btn btn-success btn-sm" data-id="{{i[0]}}" id="released">Released</a>
+                                        {% endif %}
+                                        <a class="btn btn-primary btn-sm" href="/view_petty_cash_form/{{i[0]}}"><i class="fas fa-eye"></i> More Details</a>
+                                        <a class="btn btn-info btn-sm" href="static/uploads/{{i[14]}}" target="_blank"><i class="fas fa-file"></i> View File</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function setVisible(selector, visible) {
+            document.querySelector(selector).style.display = visible ? 'block' : 'none';
+        }
+
+        $("#released").click(function () {
+			var id = $(this).data('id');
+             swal({
+                title: "Feedback / Remarks",
+                text: "Please enter here:",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: true,
+                animation: "slide-from-top",
+                inputPlaceholder: "Write something"
+            },
+            function(inputValue){
+                if (inputValue === false) return false;
+                
+                if (inputValue === "") {
+                    swal.showInputError("You need to write something!");
+                    return false
+                }
+
+                $.ajax({
+                    data : {inputValue},
+                    type : 'POST',
+                    url  : '/cashier_received/'+id,
+                    beforeSend: function(){
+                        console.log('loading');
+                        setVisible('#loading', true);
+                    },
+                    complete: function(){
+                        console.log('done');
+                        setVisible('#loading', false);
+                    },
+                    success: function(response){
+                        if(response.data == 'success') {
+                            window.location.href = '/'+response.route; 
+                        }
+                    }
+                });
+                // swal("Nice!", "You wrote: " + inputValue, "success");
+            });
+        });
+
+    </script>
+</div>
+{% endblock %}

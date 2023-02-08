@@ -1,0 +1,366 @@
+{% set active_page = "index" %}
+{% extends "header.html" %}
+{% block index %}
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Approved Petty Cash</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard[0][1] }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-thumbs-up fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Disapproved Petty Cash</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard[0][2] }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-thumbs-down fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total Users</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard[0][0] }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <div class="row">
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Approved Purchase Request</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard[0][3] }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-thumbs-up fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Disapproved Purchase Request</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dashboard[0][4] }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-thumbs-down fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Total Petty Cash Requests Per month
+                                <select id="year" name="year"></select>
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="myBarChart"></canvas>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Total Purchase Requests Per month
+                                <select id="year2" name="year2"></select>
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="myBarChart2"></canvas>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+</div>
+
+<script>
+    $(function() {
+
+        var options;
+        let year_start = 2022;
+        let year_end = (new Date).getFullYear(); // current year
+        let option = '';
+        option = '<option>Year</option>'; // first option
+
+        for (let i = year_start; i <= year_end; i++) {
+            let selected = (i === year_end ? ' selected' : '');
+            option += '<option value="' + i + '"' + selected + '>' + i + '</option>';
+        }
+        document.getElementById("year").innerHTML = option;
+        document.getElementById("year2").innerHTML = option;
+
+        $('#year').change(function(){
+            var data = $(this).val();
+            
+            // Fetch all Petty Cash record
+            var url = '/fetch_petty_cash_per_month';
+            $.post(url, {data}, (response) => {
+                var rows = JSON.parse(response);
+                Duration = [rows[0][1], rows[1][1], rows[2][1], rows[3][1], rows[4][1], rows[5][1], 
+                            rows[6][1], rows[7][1], rows[8][1], rows[9][1], rows[10][1], rows[11][1] ];
+                var ctx = document.getElementById("myBarChart");
+                var myBarChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                        datasets: [{
+                            label: "Request",
+                            backgroundColor: "#4e73df",
+                            hoverBackgroundColor: "#2e59d9",
+                            borderColor: "#4e73df",
+                            data: Duration
+                        }],
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: 'month'
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 12
+                                },
+                                maxBarThickness: 25,
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 5,
+                                    padding: 10,
+                                    callback: function (value, index, values) {
+                                        return number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: '#6e707e',
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                                    return datasetLabel + ': ' + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                    }
+                });
+
+            });
+        });
+
+        $('#year2').change(function(){
+            var data = $(this).val();
+            
+            // Fetch all Purchase Request record
+            var url = '/fetch_purchase_request_per_month';
+            $.post(url, {data}, (response) => {
+                var rows = JSON.parse(response);
+                Duration = [rows[0][1], rows[1][1], rows[2][1], rows[3][1], rows[4][1], rows[5][1], 
+                            rows[6][1], rows[7][1], rows[8][1], rows[9][1], rows[10][1], rows[11][1] ];
+                console.log(Duration);
+                var ctx = document.getElementById("myBarChart2");
+                var myBarChart2 = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                        datasets: [{
+                            label: "Request",
+                            backgroundColor: "#4e73df",
+                            hoverBackgroundColor: "#2e59d9",
+                            borderColor: "#4e73df",
+                            data: Duration
+                        }],
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                time: {
+                                    unit: 'month'
+                                },
+                                gridLines: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 12
+                                },
+                                maxBarThickness: 25,
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                    max: 50,
+                                    maxTicksLimit: 5,
+                                    padding: 10,
+                                    callback: function (value, index, values) {
+                                        return number_format(value);
+                                    }
+                                },
+                                gridLines: {
+                                    color: "rgb(234, 236, 244)",
+                                    zeroLineColor: "rgb(234, 236, 244)",
+                                    drawBorder: false,
+                                    borderDash: [2],
+                                    zeroLineBorderDash: [2]
+                                }
+                            }],
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            titleMarginBottom: 10,
+                            titleFontColor: '#6e707e',
+                            titleFontSize: 14,
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            caretPadding: 10,
+                            callbacks: {
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                                    return datasetLabel + ': ' + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        },
+                    }
+                });
+
+            });
+       });
+
+        $("#year").trigger('change');
+        $("#year2").trigger('change');
+        
+        // var url = 'database/dashboard/fetch-per-manual.php';
+        // $.get(url, (response) => {
+        //     const rows = JSON.parse(response);
+        //     var data = {
+        //         labels: [],
+        //         series: [[]]	
+        //     };
+        //     rows.forEach(row => {
+        //         data.labels.push(row.course_title);
+        //         data.series[0].push(row.total);
+        //        });
+
+        //     options = {
+        //         height: "300px",
+        //         axisX: {
+        //             showGrid: false
+        //         },
+        //     };
+        //     new Chartist.Bar('#demo-bar-chart', data, options);
+        // });
+
+    });
+
+</script>
+{% endblock %}

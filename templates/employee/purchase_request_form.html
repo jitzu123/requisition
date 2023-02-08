@@ -1,0 +1,271 @@
+{% set active_page = "purchase_request" %}
+{% extends "employee/header.html" %}
+{% block index %}
+<div class="container-fluid">
+    <form id="submit-form">
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">PURCHASE REQUEST</h1>
+        <br>
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="">Name</label>
+                <input type="text" class="form-control" name="employee" value="{{data[1]}} {{data[2]}}"
+                    readonly>
+            </div>
+            <div class="col-sm-1">
+                <label for="">Date</label>
+                <input type="text" name="date" class="form-control" readonly>
+            </div>
+            <div class="col-sm-1">
+                <label for="">Office</label>
+                <input type="text" class="form-control" name="office" value="{{data[13]}}" readonly>
+            </div>
+            <div class="col-sm-1">
+                <label for="">Request Type</label>
+                <select name="request_type" class="form-control" required>
+                    <option value="Cash">Cash</option>
+                    <option value="Item">Item</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label for="">Charge to Account of</label>
+                <select name="charge_to_account" class="form-control" required>
+                    <option value="Instructional Development Program">Instructional Development Program</option>
+                    <option value="Seminars & Conferences">Seminars & Conferences</option>
+                    <option value="Student Development Program">Student Development Program</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Office Supplies">Office Supplies</option>
+                    <option value="Postage / Communication">Postage / Communication</option>
+                    <option value="Meetings">Meetings</option>
+                    <option value="Repair & Maintenance">Repair & Maintenance</option>
+                    <option value="Capital Asset">Capital Asset</option>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label for="">Budget Allocation</label>
+                <select name="budget_allocation" class="form-control" required>
+                    <option value="Instructional Development Program">Instructional Development Program</option>
+                    <option value="Seminars & Conferences">Seminars & Conferences</option>
+                    <option value="Student Development Program">Student Development Program</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Office Supplies">Office Supplies</option>
+                    <option value="Postage / Communication">Postage / Communication</option>
+                    <option value="Meetings">Meetings</option>
+                    <option value="Repair & Maintenance">Repair & Maintenance</option>
+                    <option value="Capital Asset">Capital Asset</option>
+                </select>
+                <!-- <input type="number" class="form-control" placeholder="Budget Allocation" name="" required> -->
+            </div>
+            <div class="col-sm-3">
+                <label for="">Utilization Date</label>
+                <input type="date" class="form-control" placeholder="Date of Utilization" name="date_of_utilization" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="">Account Code</label>
+                <input type="text" class="form-control" placeholder="Account Code" name="account_code">
+            </div>
+            <div class="col-sm-3">
+                <label for="">Budget Remaining</label>
+                <input type="text" class="form-control" placeholder="Budget Remaining" name="budget_remaining">
+            </div>
+            <div class="col-sm-3">
+                <label for="">Purpose</label>
+                <textarea class="form-control" name="purpose" id="purpose" cols="20" rows="2" required></textarea>
+            </div>
+            <div class="col-sm-3">
+                <label for="file">Attachment</label>
+                <input type="file" name="file" id="file" required>
+            </div>
+        </div>
+
+        <hr>
+        <div class="row">
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-primary" id="add" title="Add"><i class="fas fa-plus"></i></button>
+                <button type="button" class="btn btn-danger" id="remove" title="Remove"><i class="fas fa-minus"></i></button>
+            </div>
+        </div>
+        <br>
+        <div class="row" id="row_0">
+            <div class="col-sm-1">
+                <label for="itemnumber">Item Number</label>
+                <input type="text" class="form-control h2" name="item_number[]" id="itemnumber" value="1" readonly>
+            </div>
+            <div class="col-sm-1">
+                <label for="quantity">Quantity</label>
+                <input type="number" data-id="1" class="form-control quantity" name="quantity[]" id="quantity_1" min="1" required>
+            </div>
+            <div class="col-sm-1">
+                <label for="unitofissue">Unit of Issue</label>
+                <input type="text" class="form-control" name="unit_of_issue[]" id="unitofissue" required>
+            </div>
+            <div class="col-sm-3">
+                <label for="itemdescription">Item Description</label>
+                <input type="text" class="form-control" name="item_description[]" id="itemdescription" required>
+            </div>
+            <div class="col-sm-1">
+                <label for="estimatedunitcost">Unit Cost</label>
+                <input type="number" data-id="1" class="form-control cost" name="estimated_unit_cost[]" id="estimatedunitcost_1" value="0" step="0.01" required>
+            </div>
+            <div class="col-sm-1">
+                <label for="estimatedamount">Estimated Amount</label>
+                <input type="text" class="form-control" name="estimated_amount[]" id="estimatedamount_1" value="0" step="0.01" required>
+            </div>
+           
+        </div>
+
+        <div id="box"></div>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-success">Submit Request</button>
+    </form>
+
+
+    <!-- <input type="text" id="input" /> -->
+    <!-- <button id="insert">Insert</button>
+    <button id="removes">Remove last element</button> -->
+
+    <!-- <div id="calling-pad">
+    </div> -->
+
+
+</div>
+<input type="text" value="0" id="cnt" style="display: none;">
+<style>
+    span {
+   display: block;  
+}
+</style>
+<script type="text/javascript">
+
+$(document).ready(function() { 
+    function setVisible(selector, visible) {
+        document.querySelector(selector).style.display = visible ? 'block' : 'none';
+    }
+    
+    $('#submit-form').submit(function(e){
+        e.preventDefault();
+        const url = '/submit_purchase_request/{{data[0]}}';
+        var formData = new FormData(this);
+        $.ajax({
+            data : formData,
+            url  : url,
+            type : 'POST',
+            cache		: false,
+            contentType	: false,
+            processData	: false,
+            beforeSend: function(){
+                console.log('loading');
+                setVisible('#loading', true);
+                // btn.ladda('start');
+            },
+            complete: function(){
+                console.log('done');
+                setVisible('#loading', false);
+                // btn.ladda('stop');
+            },
+            success: function(response){
+                // console.log(response);
+                if(response.data == 'success') {
+                    window.location.href = '/'+response.route; 
+                }
+            }
+        });
+    });
+
+    $("#file").change(function () {
+        var fileExtension = ['pdf'];
+        if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+            $("#file").val('');
+            alert("Only formats are allowed : "+fileExtension.join(', '));
+        }
+    });
+    
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    $("input[name='date']").val(today);
+
+    var totalInputs = 1;
+
+    // $('input.quantity').on('input',function(e){
+    //     alert('Changed!')
+    // });
+
+    $(document).on('input', '.quantity, .cost', function() {
+        var id = $(this).data('id');
+        var quantity = $("#quantity_"+id).val();
+        var cost = $("#estimatedunitcost_"+id).val();
+        var total = parseFloat(quantity) * parseFloat(cost);
+        if(isNaN(total)) {
+            $("#estimatedamount_"+id).val('0');
+        }
+        else {
+            $("#estimatedamount_"+id).val(total.toString());
+        }
+    });
+
+    $("#add").on("click", function () {
+        totalInputs++;
+        
+        var toAppend = '<div class="col-sm-1"><label for="itemnumber">Item Number</label><input type="text" class="form-control" name="item_number[]" id="itemnumber" value=' + totalInputs + ' readonly></div>';
+        toAppend = toAppend + '<div class="col-sm-1"><label for="quantity">Quantity</label><input type="number" data-id='+ totalInputs +' class="form-control quantity" name="quantity[]" id="quantity_' + totalInputs + '" min="1" required></div>';
+        toAppend = toAppend + '<div class="col-sm-1"><label for="unitofissue">Unit of Issue</label><input type="text" class="form-control" name="unit_of_issue[]" id="unitofissue" required></div>';
+        toAppend = toAppend + '<div class="col-sm-3"><label for="itemdescription">Item Description</label><input type="text" class="form-control" name="item_description[]" id="itemdescription" required></div>';
+        toAppend = toAppend + '<div class="col-sm-1"><label for="estimatedunitcost">Unit Cost</label><input type="number" data-id='+ totalInputs +' class="form-control cost" name="estimated_unit_cost[]" id="estimatedunitcost_' + totalInputs + '" value="0" required></div>';
+        toAppend = toAppend + '<div class="col-sm-1"><label for="estimatedamount">Estimated Amount</label><input type="number" class="form-control" name="estimated_amount[]" id="estimatedamount_' + totalInputs + '" value="0" required></div>';
+        toAppend = '<div class="row" id="row_' + totalInputs + '">' + toAppend + '</div>';
+        $("#box").append(toAppend);
+
+        // var id = "calling_" + totalInputs;
+        // $("#calling-pad").append("<span id='" + id + "'>" + inputText + "</span>");
+    });
+
+    $("#remove").on("click", function () {
+        if (totalInputs > 1) {
+            $("#row_" + totalInputs).remove();
+            totalInputs--;
+        }
+    });
+
+    // $("#add").click(function () {
+    //     var cnt = Number($("#cnt").val()) + 1;
+    //     counter = cnt + 1;
+    //     var toAppend = '<div class="col-sm-1"><label for="itemnumber">Item Number</label><input type="text" class="form-control" name="item_number[]" id="itemnumber" value=' + counter + ' readonly></div>';
+    //     toAppend = toAppend + '<div class="col-sm-1"><label for="quantity">Quantity</label><input type="number" class="form-control" name="quantity[]" id="quantity" required></div>';
+    //     toAppend = toAppend + '<div class="col-sm-2"><label for="unitofissue">Unit of Issue</label><input type="text" class="form-control" name="unit_of_issue[]" id="unitofissue" required></div>';
+    //     toAppend = toAppend + '<div class="col-sm-4"><label for="itemdescription">Item Description</label><input type="text" class="form-control" name="item_description[]" id="itemdescription" required></div>';
+    //     toAppend = toAppend + '<div class="col-sm-3"><label for="estimatedunitcost">Estimated Unit Cost</label><input type="number" class="form-control" name="estimated_unit_cost[]" id="estimatedunitcost" required></div>';
+    //     toAppend = toAppend + '<div class="col-sm-3"><label for="estimatedamount">Estimated Amount</label><input type="number" class="form-control" name="estimated_amount[]" id="estimatedamount" required></div>';
+    //     toAppend = toAppend + '<div class="col-sm-1"><br><label for="remove">Remove Item</label><button type="button" class="btn btn-danger" id="remove" onclick="remove_row(\'row_' + cnt + '\')"><i class="fas fa-minus"></i></button></div>';
+    //     toAppend = '<div class="row" id="row_' + cnt + '">' + toAppend + '</div>';
+
+    //     $("#box").append(toAppend);
+    //     $("#cnt").val(cnt);
+    // });
+
+    // function remove_row(row) {
+    //     // alert(row);
+    //     var _row = document.getElementById(row);
+    //     _row.remove(_row);
+    //     $("#cnt").val(cnt - 1);
+    // }
+
+    // function incrementValue() {
+    //     var value = parseInt(document.getElementById('itemnumber').value, 10);
+    //     value = isNaN(value) ? 1 : value;
+    //     value++;
+    //     document.getElementById('itemnumber').value = value;
+    // }
+});
+</script>
+{% endblock %}

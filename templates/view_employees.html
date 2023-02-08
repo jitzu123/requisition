@@ -1,0 +1,299 @@
+{% extends "header.html" %}
+{% block index %}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <button class="btn btn-primary btn-sm mb-0" data-toggle="modal" data-target='#addEmployee'><i class="fa fa-plus"></i> ADD EMPLOYEE</button>
+    <br><br>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Employee List</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>eSig</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Username</th>
+                            <th>Contact</th>
+                            <!-- <th>Email</th> -->
+                            <!-- <th>Address</th> -->
+                            <th>Account Type</th>
+                            <th>Department</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in data %}
+                        <tr>
+                            <td>
+                                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                            data-target="#edit{{i[0]}}" title="Edit Record">Edit</button>
+                                            <button type="button" class="btn btn-primary btn-sm" data-id="{{i[0]}}" data-role="reset" title="Reset Password">Reset</button>
+                                        {% if i[8] != 'FACULTY' %}
+                                            <button type="button" class="btn btn-warning btn-sm" data-id="{{i[0]}}" data-role="signature" title="Upload Signature">Signature</button>
+                                        {% endif %}
+                                        {% if i[10] == 'Verify' %}
+                                            <button type="button" class="btn btn-success btn-sm" data-id="{{i[0]}}" data-email="{{i[6]}}" data-role="verify" title="Verify Account">Verify</button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {% if i[11] %}
+                                    <img src="static/uploads/{{i[11]}}">
+                                {% else %}
+                                    <img src="static/img/no-image.png">
+                                {% endif %}
+                           </td>
+                            <td>{{i[1]}} {{i[2]}}</td>
+                            <td>
+                                {% if i[10] == 'Active' %}
+                                <span class="badge badge-success">{{i[10]}}</span>
+                                {% elif i[10] == 'Verify' %}
+                                <span class="badge badge-info">{{i[10]}}</span>
+                                {% else %}
+                                <span class="badge badge-danger">{{i[10]}}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{i[3]}}</td>
+                            <!-- <td>{{i[5]}}</td> -->
+                            <!-- <td>{{i[6]}}</td> -->
+                            <td>{{i[7]}}</td>
+                            <td>{{i[8]}}</td>
+                            <td>{{i[12]}}</td>
+                            
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div class="modal fade" id="addEmployee" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/add_user" method="POST">
+                    <div class="modal-body">
+                        <input type="text" name="fname" class="form-control" placeholder="First Name" required>
+                        <input type="text" name="lname" class="form-control" placeholder="Last Name" required>
+                        <input type="text" name="contact" class="form-control" placeholder="Contact" maxlength="11" required 
+                                onkeydown="return ( event.ctrlKey || event.altKey 
+                                    || (47<event.keyCode && event.keyCode<58 && event.shiftKey==false) 
+                                    || (95<event.keyCode && event.keyCode<106)
+                                    || (event.keyCode==8) || (event.keyCode==9) 
+                                    || (event.keyCode>34 && event.keyCode<40) 
+                                    || (event.keyCode==46) )">
+                        <input type="text" name="address" class="form-control" placeholder="Address" required>
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                        <select name="account" class="form-control" required>
+                            <option value="" disabled selected hidden>Select user type</option>
+                            <option>FACULTY</option>
+                            <option>PMO</option>
+                            <option>OFFICE HEAD</option>
+                            <option>DEPARTMENT HEAD</option>
+                            <option>DEAN</option>
+                            <option>BUDGET CLERK</option>
+                            <option>FINANCE HEAD</option>
+                            <option>SCHOOL PRESIDENT</option>
+                        </select>
+                        <select class="form-control" name="department" required>
+                            <option selected value="" disabled hidden>Select department / office</option>
+                            {% for i in department %}
+                            <option value="{{i[0]}}">{{i[1]}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Upload Signature</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/upload_signature" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="user_id" id="user_id">
+                        <input type="file" class="form-control" name="file" id="file" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {% for i in data %}
+    <!-- Edit Employee Modal -->
+    <div class="modal fade" id="edit{{i[0]}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Employee</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/edit_employee" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="id" value="{{i[0]}}">
+
+                        <select class="form-control" name="account" required>
+                            <option selected value="" disabled hidden>Select account type</option>
+                            <option {% if i[8] == 'FACULTY' %} selected {% endif %}>FACULTY</option>
+                            <option {% if i[8] == 'PMO' %} selected {% endif %}>PMO</option>
+                            <option {% if i[8] == 'OFFICE HEAD' %} selected {% endif %}>OFFICE HEAD</option>
+                            <option {% if i[8] == 'DEPARTMENT HEAD' %} selected {% endif %}>DEPARTMENT HEAD</option>
+                            <option {% if i[8] == 'DEAN' %} selected {% endif %}>DEAN</option>
+                            <option {% if i[8] == 'BUDGET CLERK' %} selected {% endif %}>BUDGET CLERK</option>
+                            <option {% if i[8] == 'FINANCE HEAD' %} selected {% endif %}>FINANCE HEAD</option>
+                            <option {% if i[8] == 'SCHOOL ACCOUNTANT' %} selected {% endif %}>SCHOOL ACCOUNTANT</option>
+                            <option {% if i[8] == 'SCHOOL PRESIDENT' %} selected {% endif %}>SCHOOL PRESIDENT</option>
+                        </select>
+                        <select class="form-control" name="department" required>
+                            <option selected value="" disabled hidden>Select department</option>
+                            {% for opt in department %}
+                                {% if i[9] == opt[0] %}
+                                    <option value="{{opt[0]}}" selected>{{opt[1]}}</option>
+                                {% else %}
+                                    <option value="{{opt[0]}}">{{opt[1]}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+    
+                        <select class="form-control" name="status" required>
+                            <option selected value="" disabled hidden>Select status</option>
+                            <option {% if i[10] == 'Active' %} selected {% endif %}>Active</option>
+                            <option {% if i[10] == 'Inactive' %} selected {% endif %}>Inactive</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+    
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+<script>
+    function setVisible(selector, visible) {
+        document.querySelector(selector).style.display = visible ? 'block' : 'none';
+    }
+
+    $(document).ready(function(){
+        $(document).on('click', 'button[data-role=reset]', function(){
+            var id = $(this).data('id');
+            swal({
+                    title: "Are you sure?",
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    closeOnConfirm: true
+                }, function () {
+                    const url = '/reset_password/'+id;
+
+                    $.ajax({
+                        data : {},
+                        url  : url,
+                        beforeSend: function(){
+                            console.log('loading');
+                            setVisible('#loading', true);
+                        },
+                        complete: function(){
+                            console.log('done');
+                            setVisible('#loading', false);
+                        },
+                        success: function(response){
+                            if(response.data == 'success') {
+                                window.location.href = '/'+response.route; 
+                            }
+                        }
+                    });
+                });
+        });
+
+        $(document).on('click', 'button[data-role=verify]', function(){
+            var id = $(this).data('id');
+            var email = $(this).data('email');
+            swal({
+                    title: "Are you sure you want to verify this user?",
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    closeOnConfirm: true
+                }, function () {
+                    const url = '/verify_account/'+id+'/'+email;
+                    $.ajax({
+                        data : {},
+                        url  : url,
+                        beforeSend: function(){
+                            console.log('loading');
+                            setVisible('#loading', true);
+                        },
+                        complete: function(){
+                            console.log('done');
+                            setVisible('#loading', false);
+                        },
+                        success: function(response){
+                            if(response.data == 'success') {
+                                swal({
+                                    title: "System message",
+                                    text: "Account Verified Successfully",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Ok",
+                                    closeOnConfirm: false
+                                }, function () { location.reload(); });
+                            }
+                        }
+                    });
+
+                });
+            });
+            
+        $(document).on('click', 'button[data-role=signature]', function(){
+            var id = $(this).data('id');
+            $('#user_id').val(id);
+            $('#upload-modal').modal('toggle');
+        });
+
+    });
+</script>
+{% endblock %}

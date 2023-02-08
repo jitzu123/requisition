@@ -1,0 +1,107 @@
+{% set active_page = "my_request" %}
+{% extends "sp/header.html" %}
+{% block index %}
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+    <li class='nav-item'>
+        <a class='nav-link active' data-toggle='tab' href='#s1'>Petty Cash</a>
+    </li>
+    <li class='nav-item'>
+        <a class='nav-link ' data-toggle='tab' href='#s2'>Purchase Request</a>
+    </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class='tab-pane container fade in show active' id='s1'>
+        <div class="card shadow mt-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Petty Cash Requests</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>PC NUMBER</th>
+                                <th>DATE</th>
+                                <th>NAME</th>
+                                <th>STATUS</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in petty_cash %}
+                                <tr>
+                                    <td>{{i[2]}}</td>
+                                    <td>{{i[5]}}</td>
+                                    <td>{{i[9]}}</td>
+                                    <td>
+                                        {% if i[13] == 'APPROVED' %}
+                                        <b class="text-success">{{i[13]}}</b>
+                                        {% elif i[13] == 'CANCELLED' or i[13] == 'DISAPPROVED' %}
+                                            <b class="text-danger">{{i[13]}}</b>
+                                        {% else %}
+                                            <b class="text-danger">PENDING FOR APPROVAL OF {{i[13]}}</b>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" href="/own_petty_cash_form/{{i[0]}}"><i class="fas fa-eye"></i> More Details</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='tab-pane container fade' id='s2'>
+        <div class="card shadow mt-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Purchase Requests</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="travel" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>FORM ID</th>
+                                <th>DATE</th>
+                                <th>NAME</th>
+                                <th>STATUS</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in purchase_request %}
+                                <tr>
+                                    <td>{{i[1]}}</td>
+                                    <td>{{i[3]}}</td>
+                                    <td>{{i[11]}}</td>
+                                    <td>
+                                        {% if i[22] == 'APPROVED' %}
+                                            <b class="text-success">{{i[22]}}</b>
+                                        {% elif i[22] == 'CANCELLED' or i[22] == 'DISAPPROVED' %}
+                                            <b class="text-danger">{{i[22]}}</b>
+                                        {% else %}
+                                            <b class="text-danger">PENDING FOR APPROVAL OF {{i[22]}}</b>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary btn-sm" href="/own_purchase_request_form/{{i[0]}}"><i class="fas fa-eye"></i> More Details</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

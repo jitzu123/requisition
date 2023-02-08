@@ -1,0 +1,143 @@
+{% extends "bc/header.html" %}
+{% block index %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">View Petty Cash Form</h6>
+        
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" title="Print" id="print" onclick="printDiv('printableArea')" class="btn btn-primary btn-sm"><i class="fas fa-print"></i> Print</button>
+            {% if info[13] == 'BUDGET CLERK' %}
+                <a title="Approve" id="approve" class="btn btn-success btn-sm"><i class="fas fa-thumbs-up"></i> Approve</a>
+                <button type="button" title="Cancel" class="btn btn-danger btn-sm" id="dissaprove"><i class="fas fa-thumbs-down"></i> Disapprove</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body" id="printableArea">
+        <button type="submit" id="submit" style="display: none;"></button>
+        <center>
+            <h6><b>Saint Michael College of Caraga</u></h6>
+            <h6><b>Nasipit, Agusan del Norte</u></h6>
+            <br>
+            <h5>PETTY CASH FORM<br> (for Php 1,000 and below)</h5>
+        </center>
+        <br>
+
+        <table class="table table-bordered">
+            <tr>
+                <td colspan="2"><h6>Department/Office:</h6><h5>{{info[3]}}</h5></td>
+                <td><h6>Budget Code:</h6><h5>{{info[4]}}</h5></td>
+                <td><h6>Date:</h6><h5>{{info[5]}}</h5></td>
+            </tr>
+            <tr>
+                <td colspan="3"><h6>Amount in Words:</h6><h5>{{info[6]}}</h5></td>
+                <td><h6>Php:</h6><h5>{{info[7]}}</h5></td>
+            </tr>
+            <tr>
+                <td colspan="4"><h6>Purpose:</h6><h5>{{info[8]}}</h5></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <h6>Requested By:</h6><br>
+                    <center>
+                        <h6><u>{{info[10]}}</u><br>Head of Office/Department</h6>
+                    </center>
+                </td>
+                <td><h6>Posted By:</h6><br>
+                    <center>
+                        <h6><u>{{data[1]}} {{data[2]}}</u><br>Budget Clerk</h6>
+                    </center>
+                </td>
+                <td><h6>Verified By:</h6><br>
+                    <center>
+                        <h6><u>{% if info[12] %} {{info[12]}} {% else %} _____________ {% endif %}</u><br>Finance Head</h6>
+                    </center>
+                </td>
+            </tr>
+        </table>
+    </div> 
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        function setVisible(selector, visible) {
+            document.querySelector(selector).style.display = visible ? 'block' : 'none';
+        }
+    
+        $('#approve').click(function(e){
+            e.preventDefault();
+            const url = '/bc_approve_petty_cash_form/{{info[0]}}';
+            $.ajax({
+                data : {},
+                url  : url,
+                beforeSend: function(){
+                    console.log('loading');
+                    setVisible('#loading', true);
+                },
+                complete: function(){
+                    console.log('done');
+                    setVisible('#loading', false);
+                },
+                success: function(response){
+                    if(response.data == 'success') {
+                        window.location.href = '/'+response.route; 
+                    }
+                }
+            });
+        });
+
+        $("#dissaprove").click(function () {
+            swal({
+                    title: "Feedback / Remarks",
+                    text: "Please enter reason for disapproval:",
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: true,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "Write something"
+                },
+                function(inputValue){
+                    if (inputValue === false) return false;
+                    
+                    if (inputValue === "") {
+                        swal.showInputError("You need to write something!");
+                        return false
+                    }
+
+                    $.ajax({
+                        data : {inputValue},
+                        type : 'POST',
+                        url  : '/dissaprove/{{info[0]}}/petty_cash',
+                        beforeSend: function(){
+                            console.log('loading');
+                            setVisible('#loading', true);
+                        },
+                        complete: function(){
+                            console.log('done');
+                            setVisible('#loading', false);
+                        },
+                        success: function(response){
+                            if(response.data == 'success') {
+                                window.location.href = '/'+response.route; 
+                            }
+                        }
+                    });
+                    
+                    // swal("Nice!", "You wrote: " + inputValue, "success");
+                });
+        });
+
+    });
+
+    function printDiv(divName) {
+        var printContents = "";
+        printContents += document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% set active_page = "pending_purchase_request" %}
+{% extends "pmo/header.html" %}
+{% block index %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">HEAD View Purchase Request Form</h6>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a onclick="printDiv('printableArea')" class="btn btn-primary btn-sm" title="Print"><i class="fas fa-print"></i> Print</a>
+
+            {% if purchase[22] == 'HEAD' %}
+                <a title="Approve" href="/head_approve_purchase_request_form/{{purchase[0]}}" class="btn btn-success btn-sm"><i class="fas fa-thumbs-up"></i> Approve</a>
+                <button type="button" title="Cancel" class="btn btn-danger btn-sm" id="dissaprove"><i class="fas fa-thumbs-down"></i> Disapprove</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body" id="printableArea">
+        <center>
+            <h6>SAINT MICHAEL COLLEGE OF CARAGA <br>Nasipit, Agusan del Norte<br>Tel. No. (085) 283-0529 / 817-3788
+            </h6>
+            <br>
+            <h5>PURCHASE REQUEST</h5>
+        </center>
+        <br>
+
+        <h6>No: <u>{{purchase[1]}}</u></h6><br>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ITEM NUMBER</th>
+                    <th>QUANTITY</th>
+                    <th>UNIT OF ISSUE</th>
+                    <th>ITEM DESCRIPTION</th>
+                    <th>ESTIMATED UNIT COST</th>
+                    <th>ESTIMATED AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in items %}
+                <tr>
+                    <td>{{i[2]}}</td>
+                    <td>{{i[3]}}</td>
+                    <td>{{i[4]}}</td>
+                    <td>{{i[5]}}</td>
+                    <td>{{i[6]}}</td>
+                    <td>{{i[7]}}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <th colspan="4" class="text-center">Estimated Cost</th>
+                    <th>{{purchase[20]}}</th>
+                    <th>{{purchase[21]}}</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <table class="table table-responsive table-borderless" style="font-weight:bolder;">
+            <tr>
+                <td>
+                    Requested By:<br><br><br>
+                    <h6>
+                        <u>{% if purchase[12] %} {{purchase[12]}} {% else %} _________________ {% endif
+                            %}</u><br>
+                        <b>Office Head/Dean</b><br>
+                        <small><i>SIGNATURE OVER PRINTED NAME</i></small><br>
+                    </h6>
+                </td>
+                <td class="text-center">
+                    <br><br><br>
+                    <h6>
+                        <u>{% if purchase[13] %} {{purchase[13]}} {% endif %}</u><br>
+                        <i>DATE</i>
+                    </h6>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    PURPOSE: <u>{{purchase[4]}}</u><br>
+                    CHARGE TO THE ACCOUNT OF: <u>{{purchase[5]}}</u><br>
+                    BUDGET ALLOCATION: <u>{{purchase[6]}}</u><br>
+                    OFFICE: <u>{{purchase[7]}}</u><br>
+                </td>
+                <td>
+                    DATE OF UTILIZATION: <u>{{purchase[8]}}</u><br>
+                    ACCOUNT CODE: <u>{{purchase[9]}}</u><br>
+                    BUDGET REMAINING: <u>{{purchase[10]}}</u>
+                </td>
+            </tr>
+        </table>
+        <br>
+
+        <table class="table table-responsive table-borderless" style="font-weight:bolder;">
+            <tr>
+                <td>
+                    Budget Availability:<br><br><br>
+                    <h6>
+                        <u>{% if purchase[14] %} {{purchase[14]}} {% else %} _________________ {% endif
+                            %}</u><br>
+                        <b>BUDGET CLERK</b><br>
+                        <small><i>SIGNATURE OVER PRINTED NAME</i></small><br>
+                        Date: {% if purchase[15] %} {{purchase[15]}} {% endif %}
+                    </h6>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    Verified By:<br><br><br>
+                    <h6>
+                        <u>{% if purchase[16] %} {{purchase[16]}} {% else %} _________________ {% endif
+                            %}</u><br>
+                        <b>FINANCE HEAD</b><br>
+                        <small><i>SIGNATURE OVER PRINTED NAME</i></small><br>
+                        Date: {% if purchase[17] %} {{purchase[17]}} {% endif %}
+                    </h6>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    Approved By:<br><br><br>
+                    <h6>
+                        <u>{% if purchase[18] %} {{purchase[18]}} {% else %} _________________ {% endif
+                            %}</u><br>
+                        <b>SCHOOL PRESIDENT</b><br>
+                        <small><i>SIGNATURE OVER PRINTED NAME</i></small><br>
+                        Date: {% if purchase[19] %} {{purchase[19]}} {% endif %}
+                    </h6>
+                </td>
+            </tr>
+        </table>
+
+        <h6 style="border:1px solid black; padding: 10px; width: 340px;">
+            Form No.: FM-DPM-SMCC-PR5-01<br>
+            Issue Status: 01<br>
+            Revision No.: 00<br>
+            Date Effective: 02 April 2021<br>
+            Approved By: President
+        </h6>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#dissaprove").click(function () {
+        swal({
+            title: "Feedback / Remarks",
+            text: "Please enter reason for disapproval:",
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputPlaceholder: "Write something"
+        },
+            function (inputValue) {
+                if (inputValue === false) return false;
+
+                if (inputValue === "") {
+                    swal.showInputError("You need to write something!");
+                    return false
+                }
+
+                const url = '/dissaprove/{{purchase[0]}}/purchase_request';
+                $.post(url, { inputValue }, (response) => {
+                    window.location.href = "/incoming";
+                });
+
+                // swal("Nice!", "You wrote: " + inputValue, "success");
+            });
+    });
+
+    function printDiv(divName) {
+        var printContents = "";
+        printContents += document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+
+
+</script>
+{% endblock %}

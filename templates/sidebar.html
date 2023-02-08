@@ -1,0 +1,68 @@
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/routing">
+                <div class="sidebar-brand-text mx-3">Admin</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li {% if active_page=="index" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+                <a class="nav-link" href="/">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                TRANSACTION
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/view_employees">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Employees</span></a>
+            </li>
+
+            <!-- Divider -->
+            <!-- <hr class="sidebar-divider"> -->
+
+            <!-- Nav Item - Dashboard -->
+            <!-- <li {% if active_page=="report" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+                <a class="nav-link" href="/report">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Report</span></a>
+            </li> -->
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                REFERENCES
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+           
+            <!-- Nav Item - Charts -->
+            <li {% if active_page=="department" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+                <a class="nav-link" href="/view_department_office">
+                    <i class="fas fa-fw fa-building"></i>
+                    <span>Department / Office</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>

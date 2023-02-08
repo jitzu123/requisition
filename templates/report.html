@@ -1,0 +1,117 @@
+{% set active_page = "report" %}
+{% extends "header.html" %}
+{% block index %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <!-- <h2 class="mb-2 text-gray-800">Departments</h2> -->
+    <form action="/filter_report" method="POST">
+        <div class="form-row">
+            <div class="col">
+                <select name="month" class="form-control" >
+                    <option value="" disabled selected hidden>Select month</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div class="col">
+                <select id ="year" name="year" class="form-control"></select>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary btn-sm mb-0"> Filter</button>
+            </div>
+            <div class="col"></div>
+        </div>
+    </form>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">List of Transactions</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Request Type</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in petty_cash %}
+                        <tr>
+                            <td>Petty Cash</td>
+                            <td>{{i[5]}}</td>
+                            <td>{{i[9]}}</td>
+                            <td>{{i[34]}}</td>
+                            <td>
+                                {% if i[13] == 'APPROVED' %}
+                                    <b class="text-success">{{i[13]}}</b>
+                                {% elif i[13] == 'CANCELLED' or i[13] == 'DISAPPROVED' %}
+                                    <b class="text-danger">{{i[13]}}</b>
+                                {% else %}
+                                    <b class="text-danger">PENDING FOR APPROVAL OF {{i[13]}}</b>
+                                {% endif %}
+                            </td>
+                            <td>{{i[15]}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for i in purchase_request %}
+                            <tr>
+                                <td>Purchase Request</td>
+                                <td>{{i[3]}}</td>
+                                <td>{{i[11]}}</td>
+                                <td>{{i[47]}}</td>
+                                <td>
+                                    {% if i[22] == 'APPROVED' %}
+                                        <b class="text-success">{{i[22]}}</b>
+                                    {% elif i[22] == 'CANCELLED' or i[22] == 'DISAPPROVED' %}
+                                        <b class="text-danger">{{i[22]}}</b>
+                                    {% else %}
+                                        <b class="text-danger">PENDING FOR APPROVAL OF {{i[22]}}</b>
+                                    {% endif %}
+                                </td>
+                                <td>{{i[23]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            var table = $('#dataTable').DataTable();
+            table.order( [[ 1, 'desc' ]] ).draw();
+
+            let year_start = 2021;
+            let year_end = (new Date).getFullYear(); // current year
+            let option = '';
+
+            for (let i = year_start; i <= year_end; i++) {
+                let selected = (i === year_end ? ' selected' : '');
+                option += '<option value="' + i + '"' + selected + '>' + i + '</option>';
+            }
+            document.getElementById("year").innerHTML = option;
+
+        });
+    </script>
+
+</div>
+{% endblock %}

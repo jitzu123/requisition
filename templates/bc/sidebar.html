@@ -1,0 +1,80 @@
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/routing">
+        <div class="sidebar-brand-text mx-3">{{data[8]}}</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+        <a class="nav-link" href="/">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Forms
+    </div>
+
+    <li {% if active_page=="purchase_request" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="/purchase_request_form">
+            <i class="fas fa-fw fa-shopping-cart"></i>
+            <span>Purchase Request</span></a>
+    </li>
+
+    <li {% if active_page=="petty_cash" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="/petty_cash_form">
+            <i class="fas fa-fw fa-money-bill-wave"></i>
+            <span>Petty Cash</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Pending Requests
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+
+    <!-- Nav Item - Charts -->
+    <li {% if active_page=="incoming" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="/incoming">
+            <i class="fas fa-fw fa-sign-in-alt"></i>
+            <span>Incoming Requests</span></a>
+    </li>
+
+    <li {% if active_page=="outgoing" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="/outgoing">
+            <i class="fas fa-fw fa-sign-out-alt"></i>
+            <span>Outgoing Requests</span></a>
+    </li>
+
+    <!-- Divider -->
+   <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        User
+    </div>
+
+    <li {% if active_page=="my_request" %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+        <a class="nav-link" href="/my_forms">
+            <i class="fas fa-fw fa-file-alt"></i>
+            <span>My Requests</span></a>
+    </li>
+ 
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
