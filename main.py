@@ -3,7 +3,7 @@ import sqlite3 as sqlite
 from datetime import date
 from werkzeug.utils import secure_filename
 import os
-from twilio.rest import Client
+# from twilio.rest import Client
 import datetime
 import json
 import smtplib
@@ -18,7 +18,7 @@ import string
 mail = Mail()
 currentDate = datetime.datetime.now()
 
-client = Client("AC723cbd4d958b5bc60a6e9daf709790a3","621d65c39e312ab443279a864dea98f1")
+# client = Client("AC723cbd4d958b5bc60a6e9daf709790a3","621d65c39e312ab443279a864dea98f1")
 
 app = Flask(__name__)
 app.secret_key = '/dww213sdd2!@1'
